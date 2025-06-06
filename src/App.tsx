@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -24,6 +25,14 @@ import CourierPage from "./pages/CourierPage";
 import MyAppPage from "./pages/MyAppPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import AboutPage from "./pages/AboutPage";
+import WebsitesPage from "./pages/WebsitesPage";
+import NewspapersPage from "./pages/NewspapersPage";
+import ElectricityPage from "./pages/ElectricityPage";
+import GovernmentPage from "./pages/GovernmentPage";
+import BanksPage from "./pages/BanksPage";
+import GasStationsPage from "./pages/GasStationsPage";
+import PrayersPage from "./pages/PrayersPage";
+import PharmacyPage from "./pages/PharmacyPage";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +60,14 @@ const App = () => (
           <Route path="/housing" element={<HousingPage />} />
           <Route path="/hotels" element={<HotelsPage />} />
           <Route path="/courier" element={<CourierPage />} />
+          <Route path="/websites" element={<WebsitesPage />} />
+          <Route path="/newspapers" element={<NewspapersPage />} />
+          <Route path="/electricity" element={<ElectricityPage />} />
+          <Route path="/government" element={<GovernmentPage />} />
+          <Route path="/banks" element={<BanksPage />} />
+          <Route path="/gas-stations" element={<GasStationsPage />} />
+          <Route path="/prayers" element={<PrayersPage />} />
+          <Route path="/pharmacy" element={<PharmacyPage />} />
           <Route path="/my-app" element={<MyAppPage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/about" element={<AboutPage />} />

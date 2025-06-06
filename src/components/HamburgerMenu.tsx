@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Home, Phone, Bell, Info, Code, User, ExternalLink, MessageSquare, Settings, HelpCircle } from 'lucide-react';
+import { Menu, X, Home, Phone, Bell, Info, Code, User, ExternalLink, MessageSquare, Settings, HelpCircle, Globe, Newspaper, Zap, MapPin, CreditCard, Fuel, Sparkles, Pill } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const HamburgerMenu = () => {
@@ -35,6 +36,17 @@ const HamburgerMenu = () => {
     { name: 'নোটিশ', icon: Bell, path: '/notifications', color: 'text-orange-600' },
     { name: 'সেটিংস', icon: Settings, path: '/settings', color: 'text-gray-600' },
     { name: 'সম্পর্কে', icon: Info, path: '/about', color: 'text-purple-600' }
+  ];
+
+  const additionalServices = [
+    { name: 'ওয়েবসাইট', icon: Globe, path: '/websites', color: 'text-cyan-500' },
+    { name: 'সংবাদপত্র', icon: Newspaper, path: '/newspapers', color: 'text-gray-700' },
+    { name: 'বিদ্যুৎ অফিস', icon: Zap, path: '/electricity', color: 'text-yellow-600' },
+    { name: 'সরকারি অফিস', icon: MapPin, path: '/government', color: 'text-green-800' },
+    { name: 'ব্যাংক/বীমা', icon: CreditCard, path: '/banks', color: 'text-blue-700' },
+    { name: 'গ্যাস স্টেশন', icon: Fuel, path: '/gas-stations', color: 'text-red-700' },
+    { name: 'ধর্মীয় সেবা', icon: Sparkles, path: '/prayers', color: 'text-emerald-600' },
+    { name: 'ফার্মেসি/দোকান', icon: Pill, path: '/pharmacy', color: 'text-green-500' }
   ];
 
   const supportLinks = [
@@ -122,6 +134,26 @@ const HamburgerMenu = () => {
                         >
                           <IconComponent size={20} className={link.color} />
                           <span className="bengali-font font-medium text-gray-800">{link.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Additional Services */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4 bengali-font border-b pb-2">অতিরিক্ত সেবা</h3>
+                  <div className="space-y-1">
+                    {additionalServices.map((service) => {
+                      const IconComponent = service.icon;
+                      return (
+                        <button
+                          key={service.path}
+                          onClick={() => handleNavigation(service.path)}
+                          className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors text-left focus:outline-none focus:bg-gray-100"
+                        >
+                          <IconComponent size={20} className={service.color} />
+                          <span className="bengali-font font-medium text-gray-800">{service.name}</span>
                         </button>
                       );
                     })}
