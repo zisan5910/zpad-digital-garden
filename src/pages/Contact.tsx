@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ArrowLeft, Mail, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -5,9 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import BottomNav from "@/components/BottomNav";
-import OfflineIndicator from "@/components/OfflineIndicator";
-import { useKeyboardNavigation } from "@/hooks/useKeyboardNavigation";
-import { useOffline } from "@/hooks/useOffline";
 
 interface ContactProps {
   onBack: () => void;
@@ -26,15 +24,6 @@ const Contact = ({ onBack, onHomeClick, onSearchClick, onCartClick, cartCount }:
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  const { isOffline } = useOffline();
-
-  // Setup keyboard navigation
-  useKeyboardNavigation({
-    onHomeClick,
-    onSearchClick,
-    onCartClick,
-    onContactClick: () => {}
-  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -45,16 +34,6 @@ const Contact = ({ onBack, onHomeClick, onSearchClick, onCartClick, cartCount }:
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (isOffline) {
-      toast({
-        title: "অফলাইনে আছেন!",
-        description: "অনলাইনে আসার পর আবার চেষ্টা করুন।",
-        variant: "destructive"
-      });
-      return;
-    }
-
     setIsSubmitting(true);
 
     // Create Gmail compose URL with pre-filled data
@@ -76,16 +55,13 @@ const Contact = ({ onBack, onHomeClick, onSearchClick, onCartClick, cartCount }:
     setIsSubmitting(false);
     
     toast({
-      title: "Gmail সফলভাবে খোলা হয়েছে!",
-      description: "খোলা Gmail থেকে আপনার বার্তা পাঠান।",
+      title: "Gmail opened successfully!",
+      description: "Please send your message from the opened Gmail compose window.",
     });
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
-      {/* Offline Indicator */}
-      <OfflineIndicator />
-      
+    <div className="min-h-screen bg-gray-50 pb-20">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
         <div className="flex items-center justify-between px-4 py-3">

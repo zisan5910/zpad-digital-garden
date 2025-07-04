@@ -1,3 +1,4 @@
+
 import { useState, useMemo } from "react";
 import { ArrowLeft, Search as SearchIcon, Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -5,9 +6,6 @@ import ProductGrid from "@/components/ProductGrid";
 import ProductModal from "@/components/ProductModal";
 import BottomNav from "@/components/BottomNav";
 import { Product } from "@/types/Product";
-import OfflineIndicator from "@/components/OfflineIndicator";
-import { useKeyboardNavigation } from "@/hooks/useKeyboardNavigation";
-import { useOfflineStorage } from "@/hooks/useOfflineStorage";
 
 interface SearchProps {
   products: Product[];
@@ -55,20 +53,11 @@ const Search = ({
   onContactClick,
   cartCount
 }: SearchProps) => {
-  // Use offline storage for search preferences
-  const [searchQuery, setSearchQuery] = useOfflineStorage<string>('search-query', '');
-  const [selectedCategory, setSelectedCategory] = useOfflineStorage<string>('search-category', 'All');
-  const [selectedPriceRange, setSelectedPriceRange] = useOfflineStorage('search-price-range', priceRanges[0]);
-  const [sortBy, setSortBy] = useOfflineStorage<string>('search-sort', 'name');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedPriceRange, setSelectedPriceRange] = useState(priceRanges[0]);
+  const [sortBy, setSortBy] = useState("name");
   const [showFilters, setShowFilters] = useState(false);
-
-  // Setup keyboard navigation
-  useKeyboardNavigation({
-    onHomeClick,
-    onSearchClick: () => {},
-    onCartClick,
-    onContactClick
-  });
 
   const filteredProducts = useMemo(() => {
     let filtered = products.filter(product => {
@@ -110,10 +99,7 @@ const Search = ({
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
-      {/* Offline Indicator */}
-      <OfflineIndicator />
-      
+    <div className="min-h-screen bg-gray-50 pb-20">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
         <div className="flex items-center justify-between px-4 py-3">
@@ -299,7 +285,7 @@ const Search = ({
         )}
       </div>
 
-      {/* Enhanced Bottom Navigation */}
+      {/* Bottom Navigation */}
       <BottomNav 
         cartCount={cartCount}
         onHomeClick={onHomeClick}
