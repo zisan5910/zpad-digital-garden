@@ -1,11 +1,13 @@
 import { useState, useMemo } from "react";
-import { ShoppingBag, Heart, Search, Filter, X } from "lucide-react";
+import { Heart, Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProductGrid from "@/components/ProductGrid";
 import ProductModal from "@/components/ProductModal";
 import Cart from "@/components/Cart";
 import WishlistPage from "@/components/WishlistPage";
 import BottomNav from "@/components/BottomNav";
+import Contact from "@/pages/Contact";
+import Search from "@/pages/Search";
 import { Product } from "@/types/Product";
 
 const mockProducts: Product[] = [
@@ -732,7 +734,7 @@ const Index = () => {
   const [wishlist, setWishlist] = useState<number[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState<"home" | "search" | "contact">("home");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -764,25 +766,28 @@ const Index = () => {
 
   const filteredProducts = useMemo(() => {
     return mockProducts.filter(product => {
-      const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           product.subcategory.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           product.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
-      return matchesSearch && matchesCategory;
+      return matchesCategory;
     });
-  }, [searchQuery, selectedCategory]);
+  }, [selectedCategory]);
 
   const wishlistProducts = mockProducts.filter(product => wishlist.includes(product.id));
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    setSelectedCategory("All");
-  };
+  if (currentPage === "contact") {
+    return <Contact onBack={() => setCurrentPage("home")} />;
+  }
 
-  const clearSearch = () => {
-    setSearchQuery("");
-  };
+  if (currentPage === "search") {
+    return (
+      <Search
+        products={mockProducts}
+        wishlist={wishlist}
+        onBack={() => setCurrentPage("home")}
+        onProductClick={setSelectedProduct}
+        onToggleWishlist={toggleWishlist}
+      />
+    );
+  }
 
   if (isWishlistOpen) {
     return (
@@ -797,7 +802,7 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white pb-20">
+    <div className="min-h-screen bg-gray-50 pb-20">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
         <div className="flex items-center justify-between px-4 py-3">
@@ -821,29 +826,8 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Search and Filters */}
+      {/* Category Filters */}
       <div className="px-4 py-3 space-y-3">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-          <input
-            type="text"
-            placeholder="Search products..."
-            value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="w-full pl-10 pr-10 py-2.5 bg-gray-50 rounded-full border-none focus:outline-none focus:ring-1 focus:ring-gray-200 text-sm"
-          />
-          {searchQuery && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={clearSearch}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          )}
-        </div>
-
         <div className="flex items-center justify-between">
           <div className="flex gap-2 overflow-x-auto pb-1">
             {categories.slice(0, 4).map((category) => (
@@ -872,9 +856,9 @@ const Index = () => {
         </div>
 
         {showFilters && (
-          <div className="bg-gray-50 rounded-lg p-3 space-y-2">
+          <div className="bg-white rounded-lg p-3 space-y-2 border border-gray-200">
             <div className="flex items-center justify-between">
-              <h3 className="font-medium text-sm">Filters</h3>
+              <h3 className="font-medium text-sm">All Categories</h3>
               <Button
                 variant="ghost"
                 size="icon"
@@ -884,17 +868,23 @@ const Index = () => {
                 <X className="h-4 w-4" />
               </Button>
             </div>
-            <div className="space-y-2">
-              <label className="text-sm text-gray-600">Price Range</label>
-              <div className="flex gap-2">
-                <input
-                  type="range"
-                  min="0"
-                  max="2500"
-                  className="flex-1"
-                />
-                <span className="text-sm text-gray-500">৳0-৳2500</span>
-              </div>
+            <div className="flex flex-wrap gap-2">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => {
+                    setSelectedCategory(category);
+                    setShowFilters(false);
+                  }}
+                  className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-colors ${
+                    selectedCategory === category
+                      ? "bg-black text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
             </div>
           </div>
         )}
@@ -904,8 +894,7 @@ const Index = () => {
       <section className="px-4 pb-4">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-base font-light">
-            {searchQuery ? `Search results for "${searchQuery}"` : 
-             selectedCategory === "All" ? "All Products" : selectedCategory}
+            {selectedCategory === "All" ? "All Products" : selectedCategory}
           </h2>
           <span className="text-xs text-gray-500">{filteredProducts.length} items</span>
         </div>
@@ -916,20 +905,8 @@ const Index = () => {
           </div>
         ) : filteredProducts.length === 0 ? (
           <div className="text-center py-8">
-            <div className="text-gray-400 mb-2">
-              <Search className="h-8 w-8 mx-auto mb-2" />
-            </div>
             <h3 className="text-base font-light mb-1">No products found</h3>
-            <p className="text-gray-500 text-sm">Try adjusting your search or filters</p>
-            {searchQuery && (
-              <Button
-                variant="outline"
-                onClick={clearSearch}
-                className="mt-3 rounded-full text-sm"
-              >
-                Clear search
-              </Button>
-            )}
+            <p className="text-gray-500 text-sm">Try selecting a different category</p>
           </div>
         ) : (
           <ProductGrid 
@@ -944,7 +921,11 @@ const Index = () => {
       {/* Bottom Navigation */}
       <BottomNav 
         cartCount={cartItemsCount}
+        onHomeClick={() => setCurrentPage("home")}
+        onSearchClick={() => setCurrentPage("search")}
         onCartClick={() => setIsCartOpen(true)}
+        onContactClick={() => setCurrentPage("contact")}
+        activeTab={currentPage}
       />
 
       {/* Product Modal */}
