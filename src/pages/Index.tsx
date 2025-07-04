@@ -5,6 +5,7 @@ import ProductGrid from "@/components/ProductGrid";
 import ProductModal from "@/components/ProductModal";
 import Cart from "@/components/Cart";
 import WishlistPage from "@/components/WishlistPage";
+import BottomNav from "@/components/BottomNav";
 import { Product } from "@/types/Product";
 
 const mockProducts: Product[] = [
@@ -796,36 +797,23 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pb-20">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
         <div className="flex items-center justify-between px-4 py-3">
-          <h1 className="text-2xl font-extralight tracking-widest">printpoka</h1>
+          <h1 className="text-xl font-extralight tracking-widest">printpoka</h1>
           
           <div className="flex items-center gap-1">
             <Button 
               variant="ghost" 
               size="icon" 
-              className="relative hover:bg-gray-50"
+              className="relative hover:bg-gray-50 h-8 w-8"
               onClick={() => setIsWishlistOpen(true)}
             >
-              <Heart className="h-5 w-5" />
+              <Heart className="h-4 w-4" />
               {wishlist.length > 0 && (
                 <span className="absolute -top-1 -right-1 bg-black text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px]">
                   {wishlist.length}
-                </span>
-              )}
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="relative hover:bg-gray-50"
-              onClick={() => setIsCartOpen(true)}
-            >
-              <ShoppingBag className="h-5 w-5" />
-              {cartItemsCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-black text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px]">
-                  {cartItemsCount}
                 </span>
               )}
             </Button>
@@ -834,7 +822,7 @@ const Index = () => {
       </header>
 
       {/* Search and Filters */}
-      <div className="px-4 py-4 space-y-3">
+      <div className="px-4 py-3 space-y-3">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <input
@@ -842,7 +830,7 @@ const Index = () => {
             placeholder="Search products..."
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
-            className="w-full pl-10 pr-10 py-3 bg-gray-50 rounded-full border-none focus:outline-none focus:ring-1 focus:ring-gray-200 text-sm"
+            className="w-full pl-10 pr-10 py-2.5 bg-gray-50 rounded-full border-none focus:outline-none focus:ring-1 focus:ring-gray-200 text-sm"
           />
           {searchQuery && (
             <Button
@@ -858,11 +846,11 @@ const Index = () => {
 
         <div className="flex items-center justify-between">
           <div className="flex gap-2 overflow-x-auto pb-1">
-            {categories.map((category) => (
+            {categories.slice(0, 4).map((category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition-colors ${
+                className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-colors ${
                   selectedCategory === category
                     ? "bg-black text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -877,14 +865,14 @@ const Index = () => {
             variant="ghost"
             size="icon"
             onClick={() => setShowFilters(!showFilters)}
-            className="ml-2 hover:bg-gray-50"
+            className="ml-2 hover:bg-gray-50 h-8 w-8"
           >
             <Filter className="h-4 w-4" />
           </Button>
         </div>
 
         {showFilters && (
-          <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+          <div className="bg-gray-50 rounded-lg p-3 space-y-2">
             <div className="flex items-center justify-between">
               <h3 className="font-medium text-sm">Filters</h3>
               <Button
@@ -905,7 +893,7 @@ const Index = () => {
                   max="2500"
                   className="flex-1"
                 />
-                <span className="text-sm text-gray-500">$0-$2500</span>
+                <span className="text-sm text-gray-500">৳0-৳2500</span>
               </div>
             </div>
           </div>
@@ -913,31 +901,31 @@ const Index = () => {
       </div>
 
       {/* Products Section */}
-      <section className="px-4 pb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-light">
+      <section className="px-4 pb-4">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-base font-light">
             {searchQuery ? `Search results for "${searchQuery}"` : 
              selectedCategory === "All" ? "All Products" : selectedCategory}
           </h2>
-          <span className="text-sm text-gray-500">{filteredProducts.length} items</span>
+          <span className="text-xs text-gray-500">{filteredProducts.length} items</span>
         </div>
         
         {isLoading ? (
           <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-black"></div>
           </div>
         ) : filteredProducts.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="text-center py-8">
             <div className="text-gray-400 mb-2">
-              <Search className="h-12 w-12 mx-auto mb-4" />
+              <Search className="h-8 w-8 mx-auto mb-2" />
             </div>
-            <h3 className="text-lg font-light mb-2">No products found</h3>
+            <h3 className="text-base font-light mb-1">No products found</h3>
             <p className="text-gray-500 text-sm">Try adjusting your search or filters</p>
             {searchQuery && (
               <Button
                 variant="outline"
                 onClick={clearSearch}
-                className="mt-4 rounded-full"
+                className="mt-3 rounded-full text-sm"
               >
                 Clear search
               </Button>
@@ -952,6 +940,12 @@ const Index = () => {
           />
         )}
       </section>
+
+      {/* Bottom Navigation */}
+      <BottomNav 
+        cartCount={cartItemsCount}
+        onCartClick={() => setIsCartOpen(true)}
+      />
 
       {/* Product Modal */}
       {selectedProduct && (
