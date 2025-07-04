@@ -739,6 +739,8 @@ const Index = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+
   const addToCart = (product: Product, size: string = "Default") => {
     const existingItem = cartItems.find(item => item.product.id === product.id && item.size === size);
     
@@ -762,8 +764,6 @@ const Index = () => {
     );
   };
 
-  const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0);
-
   const filteredProducts = useMemo(() => {
     return mockProducts.filter(product => {
       const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
@@ -774,7 +774,15 @@ const Index = () => {
   const wishlistProducts = mockProducts.filter(product => wishlist.includes(product.id));
 
   if (currentPage === "contact") {
-    return <Contact onBack={() => setCurrentPage("home")} />;
+    return (
+      <Contact 
+        onBack={() => setCurrentPage("home")}
+        onHomeClick={() => setCurrentPage("home")}
+        onSearchClick={() => setCurrentPage("search")}
+        onCartClick={() => setIsCartOpen(true)}
+        cartCount={cartItemsCount}
+      />
+    );
   }
 
   if (currentPage === "search") {
@@ -785,6 +793,10 @@ const Index = () => {
         onBack={() => setCurrentPage("home")}
         onProductClick={setSelectedProduct}
         onToggleWishlist={toggleWishlist}
+        onHomeClick={() => setCurrentPage("home")}
+        onCartClick={() => setIsCartOpen(true)}
+        onContactClick={() => setCurrentPage("contact")}
+        cartCount={cartItemsCount}
       />
     );
   }

@@ -4,6 +4,7 @@ import { ArrowLeft, Search as SearchIcon, Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProductGrid from "@/components/ProductGrid";
 import ProductModal from "@/components/ProductModal";
+import BottomNav from "@/components/BottomNav";
 import { Product } from "@/types/Product";
 
 interface SearchProps {
@@ -12,6 +13,10 @@ interface SearchProps {
   onBack: () => void;
   onProductClick: (product: Product) => void;
   onToggleWishlist: (productId: number) => void;
+  onHomeClick: () => void;
+  onCartClick: () => void;
+  onContactClick: () => void;
+  cartCount: number;
 }
 
 const categories = [
@@ -37,7 +42,17 @@ const priceRanges = [
   { label: "Above ৳1000", min: 1000, max: Infinity }
 ];
 
-const Search = ({ products, wishlist, onBack, onProductClick, onToggleWishlist }: SearchProps) => {
+const Search = ({ 
+  products, 
+  wishlist, 
+  onBack, 
+  onProductClick, 
+  onToggleWishlist,
+  onHomeClick,
+  onCartClick,
+  onContactClick,
+  cartCount
+}: SearchProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedPriceRange, setSelectedPriceRange] = useState(priceRanges[0]);
@@ -269,6 +284,16 @@ const Search = ({ products, wishlist, onBack, onProductClick, onToggleWishlist }
           />
         )}
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav 
+        cartCount={cartCount}
+        onHomeClick={onHomeClick}
+        onSearchClick={() => {}}
+        onCartClick={onCartClick}
+        onContactClick={onContactClick}
+        activeTab="search"
+      />
     </div>
   );
 };

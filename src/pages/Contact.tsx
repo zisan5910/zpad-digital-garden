@@ -5,12 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import BottomNav from "@/components/BottomNav";
 
 interface ContactProps {
   onBack: () => void;
+  onHomeClick: () => void;
+  onSearchClick: () => void;
+  onCartClick: () => void;
+  cartCount: number;
 }
 
-const Contact = ({ onBack }: ContactProps) => {
+const Contact = ({ onBack, onHomeClick, onSearchClick, onCartClick, cartCount }: ContactProps) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -187,6 +192,16 @@ const Contact = ({ onBack }: ContactProps) => {
           </div>
         </div>
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav 
+        cartCount={cartCount}
+        onHomeClick={onHomeClick}
+        onSearchClick={onSearchClick}
+        onCartClick={onCartClick}
+        onContactClick={() => {}}
+        activeTab="contact"
+      />
     </div>
   );
 };
