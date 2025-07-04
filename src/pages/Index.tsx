@@ -9,6 +9,10 @@ import BottomNav from "@/components/BottomNav";
 import Contact from "@/pages/Contact";
 import Search from "@/pages/Search";
 import { Product } from "@/types/Product";
+import OfflineIndicator from "@/components/OfflineIndicator";
+import { useKeyboardNavigation } from "@/hooks/useKeyboardNavigation";
+import { useOfflineStorage } from "@/hooks/useOfflineStorage";
+import { useOffline } from "@/hooks/useOffline";
 
 const mockProducts: Product[] = [
   // Electronics - Mobile Phones
@@ -730,16 +734,28 @@ const categories = [
 
 const Index = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [cartItems, setCartItems] = useState<Array<{ product: Product; size: string; quantity: number }>>([]);
-  const [wishlist, setWishlist] = useState<number[]>([]);
+  
+  // Use offline storage for cart and wishlist
+  const [cartItems, setCartItems] = useOfflineStorage<Array<{ product: Product; size: string; quantity: number }>>('cart-items', []);
+  const [wishlist, setWishlist] = useOfflineStorage<number[]>('wishlist', []);
+  
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<"home" | "search" | "contact">("home");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useOfflineStorage<string>('selected-category', 'All');
   const [showFilters, setShowFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const { isOffline } = useOffline();
+
+  // Setup keyboard navigation
+  useKeyboardNavigation({
+    onHomeClick: () => setCurrentPage("home"),
+    onSearchClick: () => setCurrentPage("search"),
+    onCartClick: () => setIsCartOpen(true),
+    onContactClick: () => setCurrentPage("contact")
+  });
 
   const addToCart = (product: Product, size: string = "Default") => {
     const existingItem = cartItems.find(item => item.product.id === product.id && item.size === size);
@@ -772,6 +788,12 @@ const Index = () => {
   }, [selectedCategory]);
 
   const wishlistProducts = mockProducts.filter(product => wishlist.includes(product.id));
+
+  // Show offline message when offline
+  if (isOffline && currentPage !== "home") {
+    // Auto redirect to home when offline for better UX
+    setCurrentPage("home");
+  }
 
   if (currentPage === "contact") {
     return (
@@ -814,7 +836,10 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-gray-50 pb-24">
+      {/* Offline Indicator */}
+      <OfflineIndicator />
+      
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
         <div className="flex items-center justify-between px-4 py-3">
