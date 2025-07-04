@@ -12,14 +12,14 @@ interface ProductGridProps {
 
 const ProductGrid = ({ products, wishlist, onProductClick, onToggleWishlist }: ProductGridProps) => {
   return (
-    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 md:gap-4">
+    <div className="grid grid-cols-2 gap-4 max-w-lg mx-auto">
       {products.map((product) => (
         <div 
           key={product.id}
           className="group cursor-pointer"
           onClick={() => onProductClick(product)}
         >
-          <div className="relative aspect-[3/4] mb-2 overflow-hidden rounded-lg bg-gray-50">
+          <div className="relative aspect-[3/4] mb-3 overflow-hidden rounded-xl bg-gray-50">
             <img 
               src={product.image}
               alt={product.name}
@@ -28,10 +28,10 @@ const ProductGrid = ({ products, wishlist, onProductClick, onToggleWishlist }: P
             <Button
               variant="ghost"
               size="icon"
-              className={`absolute top-2 right-2 h-8 w-8 rounded-full transition-all ${
+              className={`absolute top-2 right-2 h-7 w-7 rounded-full transition-all ${
                 wishlist.includes(product.id)
                   ? "bg-black text-white hover:bg-gray-800"
-                  : "bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100"
+                  : "bg-white/90 hover:bg-white opacity-0 group-hover:opacity-100"
               }`}
               onClick={(e) => {
                 e.stopPropagation();
@@ -39,12 +39,12 @@ const ProductGrid = ({ products, wishlist, onProductClick, onToggleWishlist }: P
               }}
             >
               <Heart 
-                className={`h-4 w-4 ${wishlist.includes(product.id) ? "fill-current" : ""}`} 
+                className={`h-3 w-3 ${wishlist.includes(product.id) ? "fill-current" : ""}`} 
               />
             </Button>
             {!product.inStock && (
               <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                <span className="text-white text-sm font-medium">Out of Stock</span>
+                <span className="text-white text-xs font-medium">Out of Stock</span>
               </div>
             )}
           </div>
@@ -53,18 +53,12 @@ const ProductGrid = ({ products, wishlist, onProductClick, onToggleWishlist }: P
             <h4 className="font-light text-sm leading-tight line-clamp-2 group-hover:text-gray-600 transition-colors">
               {product.name}
             </h4>
-            <p className="font-medium text-sm">${product.price}</p>
-            <div className="flex items-center justify-between">
-              <p className="text-xs text-gray-500 uppercase tracking-wider">{product.subcategory}</p>
-              {product.rating && (
-                <div className="flex items-center gap-1">
-                  <span className="text-yellow-400 text-xs">★</span>
-                  <span className="text-xs text-gray-500">{product.rating}</span>
-                </div>
-              )}
-            </div>
-            {product.brand && (
-              <p className="text-xs text-gray-400">{product.brand}</p>
+            <p className="font-medium text-sm">৳{product.price}</p>
+            {product.rating && (
+              <div className="flex items-center gap-1">
+                <span className="text-yellow-400 text-xs">★</span>
+                <span className="text-xs text-gray-500">{product.rating}</span>
+              </div>
             )}
           </div>
         </div>

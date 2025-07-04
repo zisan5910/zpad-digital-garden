@@ -85,7 +85,7 @@ const ProductModal = ({ product, isInWishlist, onClose, onAddToCart, onToggleWis
           <div className="p-4 space-y-4">
             <div>
               <h2 className="text-xl font-light mb-1">{product.name}</h2>
-              <p className="text-lg font-medium">${product.price}</p>
+              <p className="text-lg font-medium">৳{product.price}</p>
               <div className="flex items-center gap-3 mt-2">
                 <span className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full uppercase tracking-wider">
                   {product.subcategory}
